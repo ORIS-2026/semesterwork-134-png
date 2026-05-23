@@ -38,6 +38,14 @@ public class SessionService {
         redisTemplate.delete(redisKey);
     }
 
+    public Long getAccountIdBySession(String sessionId) {
+        Long accountId = redisTemplate.opsForValue().get(SESSION_KEY_PREFIX + sessionId);
+        if (accountId == null) {
+            throw new RuntimeException("Сессия не найдена или истекла");
+        }
+        return accountId;
+    }
+
     public AccountInfoDto getAccountInfo(String sessionId) {
         Long accountId = redisTemplate.opsForValue()
                 .get(SESSION_KEY_PREFIX + sessionId);

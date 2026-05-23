@@ -1,5 +1,6 @@
 package com.tech.dimefresh.security.config;
 
+import com.tech.dimefresh.security.filter.SessionFilter;
 import com.tech.dimefresh.security.userdetails.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,13 +14,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final AccountDetailsService accountDetailsService;
+    private final SessionFilter sessionFilter;
 
 
     @Bean
@@ -38,7 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(getStaticResources()).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -47,7 +50,9 @@ public class SecurityConfig {
         return new String[]{
                 "/api/auth/register",
                 "/api/auth/login",
-                "/css/**"
+                "/css/**",
+                "/api/oauth2/authorize",
+                "/api/oauth2/callback"
         };
     }
 

@@ -46,7 +46,7 @@ public class OAuth2Service {
         HttpEntity<String> httpEntityUserInfo = new HttpEntity<>(tokenExchangeHeaders);
 
         OAuthUserRespDto responseDto = restTemplate.exchange(
-                        "https://openidconnect.googleapis.com/v1/userinfo",
+                        oAuth2Properties.getUserInfoUri(),
                         HttpMethod.GET,
                         httpEntityUserInfo,
                         OAuthUserRespDto.class
