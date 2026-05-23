@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3-chats-data
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/3-chats.sql
+  - changeSet:
+      id: 4-chats-msg
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/4-chats-msg.sql

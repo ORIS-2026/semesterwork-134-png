@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5-ai-reqs
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/5-ai-requests.sql

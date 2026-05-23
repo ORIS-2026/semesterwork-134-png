@@ -1,0 +1,33 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+gen-api:
+  generate:
+    url: https://api.gen-api.ru/api/v1/networks/qwen-image-2
+  result:
+    url: https://api.gen-api.ru/api/v1/request/get/
+  quality: standard
+  security:
+    token: token
+
+minio:
+  root:
+    user: dimefresh
+    password: 123456789
+  url: http://localhost:9000
+  pool: ru-7
+  bucket:
+    images: images
+
+oauth2:
+  google:
+    client-id: YOUR_CLIENT_ID
+    client-secret: YOUR_CLIENT_SECRET
+    redirect-uri: http://localhost:8080/api/oauth2/callback
+    auth-uri: https://accounts.google.com/o/oauth2/v2/auth
+    token-uri: https://oauth2.googleapis.com/token
+    user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+    scopes: openid email profile

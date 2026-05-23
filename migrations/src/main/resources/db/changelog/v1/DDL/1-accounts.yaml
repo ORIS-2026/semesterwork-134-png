@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-accounts
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/1-accounts.sql

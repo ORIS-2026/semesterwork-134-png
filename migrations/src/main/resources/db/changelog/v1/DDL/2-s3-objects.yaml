@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2-s3-objects
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/2-s3-objects.sql

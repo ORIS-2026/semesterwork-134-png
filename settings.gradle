@@ -1,0 +1,3 @@
+rootProject.name = 'semestr_work_oris'
+include 'migrations'
+include 'impl'
