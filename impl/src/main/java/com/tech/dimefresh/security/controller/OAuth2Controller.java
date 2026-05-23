@@ -1,13 +1,11 @@
-package com.tech.dimefresh.controller;
+package com.tech.dimefresh.security.controller;
 
 
 import com.tech.dimefresh.config.properties.OAuth2Properties;
-import com.tech.dimefresh.controller.util.CookiesUtils;
+import com.tech.dimefresh.security.controller.util.CookiesUtils;
 import com.tech.dimefresh.service.OAuth2Service;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;

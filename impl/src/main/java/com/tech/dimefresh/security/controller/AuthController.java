@@ -1,7 +1,7 @@
-package com.tech.dimefresh.controller;
+package com.tech.dimefresh.security.controller;
 
 
-import com.tech.dimefresh.controller.util.CookiesUtils;
+import com.tech.dimefresh.security.controller.util.CookiesUtils;
 import com.tech.dimefresh.dto.AccountRegisterDto;
 import com.tech.dimefresh.dto.UsernamePasswordDto;
 import com.tech.dimefresh.service.AuthService;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.tech.dimefresh.controller.util.CookiesUtils.SESSION_ID_HEADER;
+import static com.tech.dimefresh.security.controller.util.CookiesUtils.SESSION_ID_HEADER;
 
 @RestController
 @RequiredArgsConstructor

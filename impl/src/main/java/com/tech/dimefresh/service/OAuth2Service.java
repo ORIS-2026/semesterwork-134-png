@@ -53,9 +53,12 @@ public class OAuth2Service {
                 )
                 .getBody();
 
+        if(responseDto.email() == null)
+            throw new RuntimeException("Непредвиденная ошибка");
+
         Long accountId;
 
-        if(!accountService.existsOAuthedAccount(responseDto.email())) {
+        if(!accountService.existsAccountWithEmail(responseDto.email())) {
             accountId = accountService.createAccount(new AccountCreateDto(
                     responseDto.name(),
                     null,

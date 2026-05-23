@@ -1,4 +1,4 @@
-package com.tech.dimefresh.controller.util;
+package com.tech.dimefresh.security.controller.util;
 
 import jakarta.servlet.http.Cookie;
 import lombok.experimental.UtilityClass;

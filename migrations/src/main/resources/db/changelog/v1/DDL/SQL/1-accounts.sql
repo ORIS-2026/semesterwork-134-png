@@ -5,5 +5,6 @@ CREATE TABLE accounts (
     email VARCHAR(100) unique,
     is_oauthed BOOLEAN NOT NULL DEFAULT FALSE,
     google_id VARCHAR(40),
-    constraint account_pk primary key (id)
+    constraint account_pk primary key (id),
+    constraint account_email_uniqueness unique (email)
 );

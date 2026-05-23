@@ -38,7 +38,7 @@ public class AccountService {
         return accountRepository.findByNameWithPassword(username).isPresent();
     }
 
-    public boolean existsOAuthedAccount(String email) {
+    public boolean existsAccountWithEmail(String email) {
         return accountRepository.findByAccountByEmail(email).isPresent();
     }
 
