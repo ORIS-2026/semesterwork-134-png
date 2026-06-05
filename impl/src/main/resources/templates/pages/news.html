@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="layout" th:id="${chat_id}">
+    <div th:replace="~{fragments/sidebar :: sidebar('chat')}"></div>
+
+    <main class="main">
+        <div class="news_container">
+
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
