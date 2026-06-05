@@ -38,6 +38,10 @@ public class AccountService {
         return accountRepository.findByAccountByEmail(email).isPresent();
     }
 
+    public boolean existsNotOAuthedAccountWithEmail(String email) {
+        return accountRepository.findNotOAuthedAccountWithEmail(email).isPresent();
+    }
+
     public AccountInfoDto findByEmail(String email) {
         return accountMapper.toInfoResp(
                 accountRepository.findByAccountByEmail(email).orElseThrow()

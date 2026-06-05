@@ -13,4 +13,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("select a from Account a where a.email = ?1")
     Optional<Account> findByAccountByEmail(String email);
+
+    @Query("select a from Account a where a.email = ?1 and a.oauthed = false")
+    Optional<Account> findNotOAuthedAccountWithEmail(String email);
 }

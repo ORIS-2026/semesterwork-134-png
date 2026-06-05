@@ -53,7 +53,7 @@ public class OAuth2Service {
                 )
                 .getBody();
 
-        if(responseDto.email() == null)
+        if(responseDto == null || responseDto.email() == null)
             throw new RuntimeException("Непредвиденная ошибка");
 
         Long accountId;
@@ -67,6 +67,9 @@ public class OAuth2Service {
                     responseDto.sub()
             )).id();
 
+        }
+        else if (accountService.existsNotOAuthedAccountWithEmail(responseDto.email())){
+            throw new RuntimeException("Пользователь с таким email уже зарегистрирован");
         }
         else {
             accountId = accountService.findByEmail(responseDto.email()).id();
