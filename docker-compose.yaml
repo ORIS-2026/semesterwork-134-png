@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17.7
-    container_name: residence_postgres
+    container_name: semester_postgres
     environment:
       POSTGRES_DB: "test"
       POSTGRES_USER: "test"
@@ -11,7 +11,7 @@ services:
   minio:
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     command: server --console-address ":9001" /data/
-    container_name: minio_residence
+    container_name: minio_semester
     restart: unless-stopped
     ports:
       - "9000:9000"
@@ -26,5 +26,6 @@ services:
       retries: 3
   cache_redis:
     image: redis:latest
+    container_name: cache_semester
     ports:
       - "6379:6379"

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main class="main">
+    <div class="auth-wrap">
+        <div class="card auth-card">
+            <div class="card__header">Регистрация</div>
+            <div class="card__body">
+
+                <div th:if="${param.error}" class="empty" style="color:#b91c1c; text-align:left; padding:0 0 10px 0;">
+                    <span>Пользователь с таким именем уже существует</span>
+                </div>
+
+                <form th:action="@{/auth/register}" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Логин</label>
+                        <input id="username" name="username" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input id="email" name="email" type="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Пароль</label>
+                        <input id="password" name="password" type="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full">Зарегистрироваться</button>
+                </form>
+
+                <div style="margin-top:12px; text-align:center;">
+                    <a th:href="@{/auth/login}" class="sidebar__link" style="display:inline-block; padding:0;">
+                        Уже есть аккаунт? Войти
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

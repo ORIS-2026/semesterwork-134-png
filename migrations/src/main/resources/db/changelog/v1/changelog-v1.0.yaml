@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: DDL/4-ai-requests.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DML/5-message-types.yaml

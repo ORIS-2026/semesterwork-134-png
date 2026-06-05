@@ -42,7 +42,7 @@ public class OAuth2Controller {
     public ResponseEntity<?> callback(
             @RequestParam String code,
             @RequestParam(required = false) String error,
-            HttpServletResponse response) {
+            HttpServletResponse response) throws IOException {
 
         if (error != null) {
             return ResponseEntity.badRequest().build();
@@ -53,7 +53,8 @@ public class OAuth2Controller {
         response.addCookie(
                 CookiesUtils.prepareSessionCookie(sessionId)
         );
+        response.sendRedirect("/");
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.status(302).build();
     }
 }

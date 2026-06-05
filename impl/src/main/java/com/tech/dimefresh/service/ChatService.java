@@ -1,13 +1,13 @@
 package com.tech.dimefresh.service;
 
+import com.tech.dimefresh.dto.AccountRegisterDto;
 import com.tech.dimefresh.dto.ChatMessageDto;
 import com.tech.dimefresh.dto.S3ObjectDto;
 import com.tech.dimefresh.entity.*;
-import com.tech.dimefresh.repository.AiRequestRepository;
-import com.tech.dimefresh.repository.ChatMessageRepository;
-import com.tech.dimefresh.repository.ChatRepository;
-import com.tech.dimefresh.repository.MessageTypeRepository;
+import com.tech.dimefresh.exception.rest.internal.InternalServerTroubleExceptionRest;
+import com.tech.dimefresh.repository.*;
 import com.tech.dimefresh.s3.S3Manager;
+import com.tech.dimefresh.security.util.AuthenticationFacade;
 import com.tech.dimefresh.service.dto.GenApiRequest;
 import com.tech.dimefresh.service.dto.GenApiResponse;
 import com.tech.dimefresh.utils.GenApiProperties;
@@ -27,17 +27,19 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URL;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ChatAiService {
+public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final AiRequestRepository aiRequestRepository;
     private final MessageTypeRepository messageTypeRepository;
+    private final AccountRepository accountRepository;
 
     private final S3Manager s3Manager;
 
@@ -48,12 +50,14 @@ public class ChatAiService {
     public static final String CREATED_AT_ATTR = "createdAt";
     public static final int PAGE_SIZE = 15;
 
+    private final AuthenticationFacade authenticationFacade;
+
     @Transactional
     public void handlePrompt(Long chatId, String prompt) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new RuntimeException("Chat not found: " + chatId));
 
-        MessageType textType = messageTypeRepository.findByTitle(MessageTypeEnum.TEXT.name())
+        MessageType textType = messageTypeRepository.findByTitle(MessageTypeEnum.TEXT)
                 .orElseThrow(() -> new RuntimeException("Message type TEXT not found"));
 
         ChatMessage userMessage = new ChatMessage();
@@ -66,7 +70,7 @@ public class ChatAiService {
         chatMessageRepository.save(userMessage);
 
         List<AiRequest> activeRequests =
-                aiRequestRepository.findByChatMsgId_Chat_IdAndStatus(chatId, AiRequestStatus.PROCESSING);
+                aiRequestRepository.findByChatIdAndStatus(chatId, AiRequestStatus.PROCESSING);
 
         if (!activeRequests.isEmpty()) {
 
@@ -81,10 +85,6 @@ public class ChatAiService {
             log.info("Active AI request exists for chat {}, warning sent", chatId);
         }
         else {
-            AiRequest aiRequest = new AiRequest();
-            aiRequest.setStatus(AiRequestStatus.PROCESSING);
-            aiRequest = aiRequestRepository.save(aiRequest);
-
             ChatMessage botMessage = new ChatMessage();
             botMessage.setChat(chat);
             botMessage.setAccount(null);
@@ -92,10 +92,12 @@ public class ChatAiService {
             botMessage.setMsgContentText("идет генерация...");
             botMessage.setByBot(true);
             botMessage.setCreatedAt(Instant.now().plusMillis(1));
-            chatMessageRepository.save(botMessage);
+            botMessage = chatMessageRepository.save(botMessage);
 
-            aiRequest.setChatMsgId(botMessage);
-
+            AiRequest aiRequest = new AiRequest();
+            aiRequest.setStatus(AiRequestStatus.PROCESSING);
+            aiRequest.setChatMsg(botMessage);
+            aiRequest = aiRequestRepository.save(aiRequest);
 
             try {
                 HttpHeaders headers = HttpUtils.prepareHeadersForGeneration(genApiProperties.getToken());
@@ -104,11 +106,13 @@ public class ChatAiService {
 
                 GenApiResponse responseBody =
                         restTemplate.postForEntity(genApiProperties.getRequestUrl(), requestEntity, GenApiResponse.class).getBody();
-                aiRequest.setApiServiceRequestId(responseBody.request_id());//TODO: null pointer позже обработать
+
+                aiRequest.setApiServiceRequestId(responseBody.request_id());
 
                 log.info("AI request sent for chatId={}, prompt='{}'", chatId, prompt);
             } catch (Exception e) {
                 log.error("Failed to send AI generation request", e);
+                botMessage.setMsgContentText("Не получилось запустить генерацию");
             }
 
             aiRequestRepository.save(aiRequest);
@@ -122,8 +126,12 @@ public class ChatAiService {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
         Page<ChatMessage> messagePage = chatMessageRepository.findAllByChatId(chatId, pageable);
-        MessageType textType = messageTypeRepository.findByTitle(MessageTypeEnum.TEXT.name())
-                .orElseThrow(() -> new RuntimeException("Message type TEXT not found"));
+        log.info("Получены сообщения по чату: {}", chatId);
+        MessageType textType = messageTypeRepository.findByTitle(MessageTypeEnum.TEXT)
+                .orElseThrow(() -> {
+                    log.info("Message type TEXT not found");
+                    return new InternalServerTroubleExceptionRest();
+                });
 
 
         return messagePage.stream()
@@ -137,12 +145,12 @@ public class ChatAiService {
 
                     if(!isTextMsg) {
                         S3Object s3Object = chatMessage.getS3Object();
-                        URL url = s3Manager.get(s3Object.getId().toString(), s3Object.getBucket());
+                        String url = s3Manager.get(s3Object.getId().toString(), s3Object.getBucket());
 
                         s3ObjectDto = new S3ObjectDto(
                                 s3Object.getId().toString(),
                                 s3Object.getContentType(),
-                                url.toString()
+                                url
                         );
                     }
 
@@ -155,5 +163,27 @@ public class ChatAiService {
                     );
                 })
                 .toList();
+    }
+
+    @Transactional
+    public Long getChatId() {
+        Long authenticatedUserId = authenticationFacade.getAuthenticatedUserId();
+
+        Chat chat = chatRepository.findByOwnerId(authenticatedUserId)
+                .orElse(null);
+
+        if(chat == null) {
+            chat = new Chat();
+
+            Account authenticatedAccount = accountRepository.findById(authenticatedUserId)
+                    .orElseThrow(() -> {
+                        log.info("Не найден пользователь с id: {}", authenticatedUserId);
+                        return new InternalServerTroubleExceptionRest();
+                    });
+            chat.setOwner(authenticatedAccount);
+            chat = chatRepository.save(chat);
+        }
+
+        return chat.getId();
     }
 }

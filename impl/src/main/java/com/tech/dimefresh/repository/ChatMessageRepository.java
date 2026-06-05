@@ -17,6 +17,4 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> 
     @Query("select msg from ChatMessage msg where msg.chat.id = :chatId")
     Page<ChatMessage> findAllByChatId(@Param("chatId") Long chatId, Pageable pageable);
 
-    // Сообщения, связанные с конкретным AI-запросом
-    List<ChatMessage> findByAiRequestId(UUID aiRequestId);
 }

@@ -2,14 +2,12 @@ package com.tech.dimefresh.service;
 
 
 import com.tech.dimefresh.dto.AccountInfoDto;
-import com.tech.dimefresh.dto.UsernamePasswordDto;
-import com.tech.dimefresh.mapper.AccountMapper;
-import com.tech.dimefresh.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,12 +36,8 @@ public class SessionService {
         redisTemplate.delete(redisKey);
     }
 
-    public Long getAccountIdBySession(String sessionId) {
-        Long accountId = redisTemplate.opsForValue().get(SESSION_KEY_PREFIX + sessionId);
-        if (accountId == null) {
-            throw new RuntimeException("Сессия не найдена или истекла");
-        }
-        return accountId;
+    public Optional<Long> getAccountIdBySession(String sessionId) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(SESSION_KEY_PREFIX + sessionId));
     }
 
     public AccountInfoDto getAccountInfo(String sessionId) {

@@ -5,7 +5,7 @@ import com.tech.dimefresh.dto.AccountCreateDto;
 import com.tech.dimefresh.dto.AccountCreatedDto;
 import com.tech.dimefresh.dto.AccountInfoDto;
 import com.tech.dimefresh.entity.Account;
-import com.tech.dimefresh.mapper.AccountMapper;
+import com.tech.dimefresh.service.mapper.AccountMapper;
 import com.tech.dimefresh.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,10 +32,6 @@ public class AccountService {
         account.setGoogleId(dto.googleId());
 
         return accountMapper.toCreatedResp(accountRepository.save(account));
-    }
-
-    public boolean existsAccountWithPassword(String username) {
-        return accountRepository.findByNameWithPassword(username).isPresent();
     }
 
     public boolean existsAccountWithEmail(String email) {

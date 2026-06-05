@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6-message-types
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/5-message-types.sql

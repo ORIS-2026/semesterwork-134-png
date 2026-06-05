@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/chat_messages.css}">
+</head>
+<body>
+
+<div class="layout" th:id="${chat_id}">
+    <div th:replace="~{fragments/sidebar :: sidebar('chat')}"></div>
+
+    <main class="main">
+        <div class="chat-wrap">
+            <div class="chat-messages" id="chatMessages">
+            </div>
+            <div class="chat-input-bar">
+                <input type="text" id="chatInput" class="form-control chat-input" placeholder="Введите запрос для генерации...">
+                <button id="chatSubmit" class="btn btn--primary">Отправить</button>
+                <button id="chatUpdate" class="btn btn--primary">Обновить чат</button>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/chat_messages.js}"></script>
+
+</body>
+</html>

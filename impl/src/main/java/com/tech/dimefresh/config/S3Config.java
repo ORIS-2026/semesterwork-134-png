@@ -12,6 +12,7 @@ import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 import java.net.URI;
 
@@ -20,24 +21,37 @@ import java.net.URI;
 public class S3Config {
     private final S3Properties s3Properties;
 
+
     @Bean
     public S3Client s3Client(){
-        AwsCredentials awsCredentials = AwsBasicCredentials
-                .create(s3Properties.getUsername(), s3Properties.getPassword());
-
-        S3Configuration s3Configuration = S3Configuration.builder()
-                .pathStyleAccessEnabled(true)
-                .build();
-
         return S3Client.builder()
-                .serviceConfiguration(s3Configuration)
+                .serviceConfiguration(s3Configuration())
                 .httpClient(ApacheHttpClient.create())
                 .region(Region.of(s3Properties.getPool()))
                 .endpointOverride(URI.create(s3Properties.getUrl()))
-                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
                 .build();
     }
 
+    @Bean
+    public S3Presigner s3Presigner() {
+        return S3Presigner.builder()
+                .region(Region.of(s3Properties.getPool()))
+                .endpointOverride(URI.create(s3Properties.getUrl()))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
+                .serviceConfiguration(s3Configuration())
+                .build();
+    }
 
+    private S3Configuration s3Configuration() {
+        return S3Configuration.builder()
+                .pathStyleAccessEnabled(true)
+                .build();
+    }
+
+    private AwsCredentials awsCredentials() {
+        return AwsBasicCredentials
+                .create(s3Properties.getUsername(), s3Properties.getPassword());
+    }
 
 }

@@ -12,9 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
-    // Поиск чатов по владельцу
-    List<Chat> findByOwnerId(Long ownerId);
+    // Поиск чата по владельцу
+    Optional<Chat> findByOwnerId(Long ownerId);
 
-    // Можно добавить пагинационный вариант
-    Page<Chat> findByOwnerId(Long ownerId, Pageable pageable);
 }

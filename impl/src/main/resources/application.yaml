@@ -1,4 +1,18 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/test
+    username: test
+    password: 123456789
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: validate
+  liquibase:
+    change-log: db/changelog/v1/changelog-v1.0.yaml
+    enabled: true
   data:
     redis:
       host: localhost
@@ -11,7 +25,7 @@ gen-api:
     url: https://api.gen-api.ru/api/v1/request/get/
   quality: standard
   security:
-    token: token
+    token: sk-RsR9n3QLZQPBRQAB4luweFl5QhR0m87BzmfjmVawNuabeo02fzo6cndJz1lp
 
 minio:
   root:
@@ -24,10 +38,19 @@ minio:
 
 oauth2:
   google:
-    client-id: YOUR_CLIENT_ID
-    client-secret: YOUR_CLIENT_SECRET
+    client-id: 159883933534-p73lht2g617juqn92ll1mciucl42jjua.apps.googleusercontent.com
+    client-secret: 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
     redirect-uri: http://localhost:8080/api/oauth2/callback
     auth-uri: https://accounts.google.com/o/oauth2/v2/auth
     token-uri: https://oauth2.googleapis.com/token
     user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
     scopes: openid email profile
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          servlet:
+            resource:
+              ResourceHttpRequestHandler: WARN

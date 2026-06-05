@@ -9,18 +9,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 
 import java.net.URL;
+import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class S3Manager {
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
     private final S3Properties s3Properties;
 
     @PostConstruct
@@ -37,20 +43,27 @@ public class S3Manager {
                 .key(object.key())
                 .contentType(object.contentType())
                 .build();
-        PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest,
+        s3Client.putObject(putObjectRequest,
                 RequestBody.fromBytes(object.file()));
     }
 
-    public URL get(String key, String bucket) {
-        try {
-            GetUrlRequest getObjectRequest = GetUrlRequest.builder()
+    public String get(String key, String bucket) {
+        try{
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(bucket)
                     .key(key)
                     .build();
 
-            return s3Client.utilities().getUrl(getObjectRequest);
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(5))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            PresignedGetObjectRequest presignedGetObjectRequest = s3Presigner.presignGetObject(presignRequest);
+
+            return presignedGetObjectRequest.url().toExternalForm();
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 

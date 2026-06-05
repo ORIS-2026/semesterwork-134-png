@@ -5,4 +5,4 @@ databaseChangeLog:
       changes:
         - sqlFile:
             relativeToChangelogFile: true
-            path: SQL/5-ai-requests.sql
+            path: SQL/5-ai-request.sql

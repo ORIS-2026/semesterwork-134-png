@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    @Query("select a from Account a where a.name = ?1 and a.isOauthed=false ")
+    @Query("select a from Account a where a.name = ?1 and a.oauthed=false ")
     Optional<Account> findByNameWithPassword(String name);
 
     @Query("select a from Account a where a.email = ?1")

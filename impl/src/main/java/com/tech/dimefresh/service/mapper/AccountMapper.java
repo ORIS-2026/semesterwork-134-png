@@ -1,4 +1,4 @@
-package com.tech.dimefresh.mapper;
+package com.tech.dimefresh.service.mapper;
 
 
 import com.tech.dimefresh.dto.AccountCreatedDto;

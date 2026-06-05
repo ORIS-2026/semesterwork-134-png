@@ -23,7 +23,7 @@ public class AiRequest {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_msg_id")
-    private ChatMessage chatMsgId;
+    private ChatMessage chatMsg;
 
     @Column(name = "api_service_request_id")
     private Long apiServiceRequestId;

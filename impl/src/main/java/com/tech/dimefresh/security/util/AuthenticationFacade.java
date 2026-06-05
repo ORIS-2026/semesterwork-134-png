@@ -1,7 +1,9 @@
 package com.tech.dimefresh.security.util;
 
 
+import com.tech.dimefresh.exception.rest.auth.UnauthorizedExceptionRest;
 import com.tech.dimefresh.repository.AccountRepository;
+import com.tech.dimefresh.security.userdetails.AccountDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,18 +19,23 @@ public class AuthenticationFacade {
      */
     public Long getAuthenticatedUserId(){
         Long userId = null;
-        try {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if(authentication == null)
+
+            if(authentication == null) {
                 System.out.println("Something goes wrong");
-            System.out.println("Authentication class is:" + authentication.getClass().getName());
+            }
+            else {
+                System.out.println("Authentication class is:" + authentication.getClass().getName());
 
-            
+                Object principal = authentication.getPrincipal();
+                System.out.println("Type of principal: " + principal.getClass().getName());
+                if(principal.getClass() == AccountDetails.class)
+                    userId = ((AccountDetails) principal).getId();
+                else
+                    throw new UnauthorizedExceptionRest("Пользователь не авторизован");
+            }
 
-        }
-        catch (NullPointerException exc) {
-            throw new RuntimeException("Пользователь не аутентифицирован");
-        }
         return userId;
     }
 }
