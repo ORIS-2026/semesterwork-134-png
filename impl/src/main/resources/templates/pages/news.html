@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чат</title>
+    <title>Новости</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/news.css}">
 </head>
 <body>
 
-<div class="layout" th:id="${chat_id}">
-    <div th:replace="~{fragments/sidebar :: sidebar('chat')}"></div>
+<div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar('news')}"></div>
 
     <main class="main">
-        <div class="news_container">
-
-        </div>
+        <div class="news-feed" id="newsFeed"></div>
     </main>
 </div>
 
+<script th:src="@{/js/news.js}"></script>
 </body>
 </html>

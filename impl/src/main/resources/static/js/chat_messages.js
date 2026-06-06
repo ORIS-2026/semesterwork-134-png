@@ -1,3 +1,10 @@
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+}
+
 // Функция для безопасного экранирования HTML (предотвращает XSS)
 function escapeHtml(str) {
     if (str == null) return '';
@@ -209,29 +216,32 @@ async function sendPrompt() {
         const response = await fetch(`/api/chat/${chatId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
             },
             body: JSON.stringify({ prompt: promptText })
         });
 
-        if (!response.ok) {
+        if (response.status === 400) {
+            alert("Слишком длинный запрос, можно не больше 500 символов");
+            chatSubmit.disabled = false;
+            chatInput.disabled = false;
+            chatSubmit.textContent = 'Отправить';
+        } else if (!response.ok) {
             throw new Error(`Ошибка HTTP: ${response.status}`);
+        } else {
+            chatInput.value = '';
+
+            const infoMsg = document.createElement('div');
+            infoMsg.className = 'message message--info';
+            infoMsg.innerHTML = '<div class="message__text">✅ Запрос отправлен. Генерация ответа... страница обновится через несколько секунд.</div>';
+            messagesContainer.appendChild(infoMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
         }
-
-        // Очищаем поле ввода
-        chatInput.value = '';
-
-        // Показываем сообщение о том, что запрос отправлен
-        const infoMsg = document.createElement('div');
-        infoMsg.className = 'message message--info';
-        infoMsg.innerHTML = '<div class="message__text">✅ Запрос отправлен. Генерация ответа... страница обновится через несколько секунд.</div>';
-        messagesContainer.appendChild(infoMsg);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        // Перезагружаем страницу через 3 секунды, чтобы показать ответ бота
-        setTimeout(() => {
-            window.location.reload();
-        }, 3000);
 
     } catch (error) {
         console.error('Ошибка отправки:', error);

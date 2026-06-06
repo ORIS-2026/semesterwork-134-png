@@ -2,17 +2,18 @@ package com.tech.dimefresh.service;
 
 
 import com.tech.dimefresh.dto.NewsDto;
-import com.tech.dimefresh.entity.Account;
 import com.tech.dimefresh.entity.ChatMessage;
 import com.tech.dimefresh.entity.News;
 import com.tech.dimefresh.entity.NewsStatus;
-import com.tech.dimefresh.repository.AccountRepository;
+import com.tech.dimefresh.exception.rest.notfound.NotFoundExceptionRest;
 import com.tech.dimefresh.repository.ChatMessageRepository;
 import com.tech.dimefresh.repository.NewsRepository;
 import com.tech.dimefresh.s3.S3Manager;
+import com.tech.dimefresh.security.util.AuthenticationFacade;
 import com.tech.dimefresh.service.dto.CreateNewsDto;
 import com.tech.dimefresh.service.dto.NewsDataProjection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,12 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NewsService {
+    private final AuthenticationFacade authenticationFacade;
+
     private final S3Manager s3Manager;
     private final NewsRepository newsRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -59,22 +63,43 @@ public class NewsService {
         newsRepository.save(news);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<NewsDto> getPublishedNews(int page) {
         int offset = page * PAGE_SIZE;
+        Long authenticatedAccountId = authenticationFacade.getAuthenticatedUserId();
 
         return newsRepository.findNewsPage(offset, PAGE_SIZE).stream()
                 .map(news -> {
                     String imageUrl = s3Manager.get(news.s3Key(), news.s3Bucket());
+
+                    log.info("S3 объект:\nkey - {}\n bucket - {}", news.s3Key(), news.s3Bucket());
+                    boolean likedByAuthorizedAccount = newsRepository.existsLike(news.newsId(), authenticatedAccountId);
+
                     return new NewsDto(
                             news.newsId(),
                             news.prompt(),
                             imageUrl,
                             news.accountId(),
                             news.name(),
-                            news.publishedAt()
+                            news.publishedAt(),
+                            news.likedAccounts(),
+                            likedByAuthorizedAccount
                     );
                 })
                 .toList();
+    }
+
+    @Transactional
+    public void toggleLike(UUID newsId) {
+        if (!newsRepository.existsById(newsId)) {
+            throw new NotFoundExceptionRest("Пост не найден");
+        }
+        Long accountId = authenticationFacade.getAuthenticatedUserId();
+
+        if (newsRepository.existsLike(newsId, accountId)) {
+            newsRepository.removeLike(accountId, newsId);
+        } else {
+            newsRepository.addLike(accountId, newsId);
+        }
     }
 }

@@ -1,8 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 7-prompt-news
+      id: 8-news-likes
       author: dimefresh
       changes:
         - sqlFile:
             relativeToChangelogFile: true
-            path: SQL/6-prompt-news.sql
+            path: SQL/7-news-likes.sql

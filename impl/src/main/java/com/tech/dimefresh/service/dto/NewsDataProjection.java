@@ -13,6 +13,7 @@ public record NewsDataProjection(
         Long accountId,
         String name,
 
-        Instant publishedAt
+        Instant publishedAt,
+        Integer likedAccounts
 ) {
 }

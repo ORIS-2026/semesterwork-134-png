@@ -4,12 +4,10 @@ package com.tech.dimefresh.controller.rest;
 import com.tech.dimefresh.dto.NewsDto;
 import com.tech.dimefresh.service.NewsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/news")
@@ -21,4 +19,10 @@ public class NewsApi {
     public List<NewsDto> getPublishedNews(@RequestParam(defaultValue = "0") int page) {
         return newsService.getPublishedNews(page);
     }
+
+    @PostMapping("/{newsId}/like")
+    public void toggleLike(@PathVariable UUID newsId) {
+        newsService.toggleLike(newsId);
+    }
+
 }

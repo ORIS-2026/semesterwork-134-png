@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 7-prompt-news
+      id: 5-ai-reqs
       author: dimefresh
       changes:
         - sqlFile:

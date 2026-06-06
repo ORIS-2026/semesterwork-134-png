@@ -5,6 +5,7 @@ import com.tech.dimefresh.dto.AccountRegisterDto;
 import com.tech.dimefresh.dto.ChatMessageDto;
 import com.tech.dimefresh.dto.S3ObjectDto;
 import com.tech.dimefresh.entity.*;
+import com.tech.dimefresh.exception.rest.badreq.BadRequestExceptionRest;
 import com.tech.dimefresh.exception.rest.internal.InternalServerTroubleExceptionRest;
 import com.tech.dimefresh.repository.*;
 import com.tech.dimefresh.s3.S3Manager;
@@ -70,6 +71,9 @@ public class ChatService {
         if(!authenticationFacade.getAuthenticatedUserId()
                 .equals(chat.getOwner().getId()))
             throw new RuntimeException("Нет прав на создание запроса для генерации в этом чате");//TODO: forbidden
+
+        if(prompt.length() > 500)
+            throw new BadRequestExceptionRest("Слишком длинный запрос");//TODO: 400
 
         MessageType textType = messageTypeRepository.findByTitle(MessageTypeEnum.TEXT)
                 .orElseThrow(() -> new RuntimeException("Message type TEXT not found"));

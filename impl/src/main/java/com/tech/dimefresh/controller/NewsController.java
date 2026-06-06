@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class NewsController {
 
     @GetMapping
-    public String showChat() {
+    public String showNews() {
         return "pages/news";
     }
 }

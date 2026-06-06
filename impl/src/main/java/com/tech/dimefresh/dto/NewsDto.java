@@ -11,6 +11,9 @@ public record NewsDto(
         Long accountId,
         String name,
 
-        Instant publishedAt
+        Instant publishedAt,
+        Integer likedAccounts,
+
+        Boolean likedByMe
 ) {
 }

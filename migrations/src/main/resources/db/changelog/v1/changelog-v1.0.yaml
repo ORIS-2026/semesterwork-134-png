@@ -14,3 +14,9 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: DML/5-message-types.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/6-news-tables.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/7-likes-table.yaml

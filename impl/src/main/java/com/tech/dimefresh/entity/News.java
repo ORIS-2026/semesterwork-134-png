@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,4 +36,12 @@ public class News {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NewsStatus status;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "news_likes",
+            joinColumns = @JoinColumn(name = "news_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id", referencedColumnName = "id")
+    )
+    private List<Account> likedAccounts;
 }

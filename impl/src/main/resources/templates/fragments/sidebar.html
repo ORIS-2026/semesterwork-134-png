@@ -14,6 +14,13 @@
             </a>
         </li>
         <li>
+            <a th:href="@{/news}"
+               class="sidebar__link"
+               th:classappend="${activePage == 'news'} ? 'sidebar__link__active' : ''">
+                Новости
+            </a>
+        </li>
+        <li>
             <a th:href="@{/profile}"
                class="sidebar__link"
                th:classappend="${activePage == 'profile'} ? 'sidebar__link__active' : ''">
