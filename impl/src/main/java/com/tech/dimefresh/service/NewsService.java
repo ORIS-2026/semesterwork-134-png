@@ -82,7 +82,7 @@ public class NewsService {
                             news.accountId(),
                             news.name(),
                             news.publishedAt(),
-                            news.likedAccounts(),
+                            news.likedAccounts().intValue(),
                             likedByAuthorizedAccount
                     );
                 })

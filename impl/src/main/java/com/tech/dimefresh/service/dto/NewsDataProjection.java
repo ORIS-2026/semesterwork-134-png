@@ -14,6 +14,6 @@ public record NewsDataProjection(
         String name,
 
         Instant publishedAt,
-        Integer likedAccounts
+        Long likedAccounts
 ) {
 }

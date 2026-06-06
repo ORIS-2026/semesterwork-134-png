@@ -1,28 +1,27 @@
 package com.tech.dimefresh.controller.rest;
 
-
+import com.tech.dimefresh.controller.NewsApiSpec;
 import com.tech.dimefresh.dto.NewsDto;
 import com.tech.dimefresh.service.NewsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/news")
 @RequiredArgsConstructor
-public class NewsApi {
+public class NewsApi implements NewsApiSpec {
+
     private final NewsService newsService;
 
-    @GetMapping
-    public List<NewsDto> getPublishedNews(@RequestParam(defaultValue = "0") int page) {
+    @Override
+    public List<NewsDto> getPublishedNews(int page) {
         return newsService.getPublishedNews(page);
     }
 
-    @PostMapping("/{newsId}/like")
-    public void toggleLike(@PathVariable UUID newsId) {
+    @Override
+    public void toggleLike(UUID newsId) {
         newsService.toggleLike(newsId);
     }
-
 }

@@ -13,7 +13,5 @@ public record NewsDto(
 
         Instant publishedAt,
         Integer likedAccounts,
-
         Boolean likedByMe
-) {
-}
+) {}

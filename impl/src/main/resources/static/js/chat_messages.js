@@ -1,8 +1,12 @@
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
+
+    var token  = ''
+    if (parts.length === 2) token = parts.pop().split(';').shift();
+
+    console.log("CSRF token " + token)
+    return token;
 }
 
 // Функция для безопасного экранирования HTML (предотвращает XSS)

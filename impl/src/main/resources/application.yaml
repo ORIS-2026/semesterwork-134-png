@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/test
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/test}
     username: test
     password: 123456789
   jpa:
@@ -15,8 +15,8 @@ spring:
     enabled: true
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 gen-api:
   generate:
@@ -31,7 +31,7 @@ minio:
   root:
     user: dimefresh
     password: 123456789
-  url: http://localhost:9000
+  url: ${MINIO_URL:http://localhost:9000}
   pool: ru-7
   bucket:
     images: images
