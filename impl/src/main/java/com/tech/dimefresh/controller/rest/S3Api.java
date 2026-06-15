@@ -1,7 +1,7 @@
 package com.tech.dimefresh.controller.rest;
 
-import com.tech.dimefresh.controller.S3ApiSpec;
 import com.tech.dimefresh.config.properties.S3Properties;
+import com.tech.dimefresh.controller.S3ApiSpec;
 import com.tech.dimefresh.s3.S3Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;

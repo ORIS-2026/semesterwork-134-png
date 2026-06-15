@@ -2,9 +2,7 @@ package com.tech.dimefresh.security.controller;
 
 
 import com.tech.dimefresh.dto.AccountRegisterDto;
-import com.tech.dimefresh.dto.AccountInfoDto;
 import com.tech.dimefresh.dto.UsernamePasswordDto;
-import com.tech.dimefresh.exception.rest.auth.SimpleUnauthorizedExceptionRest;
 import com.tech.dimefresh.security.controller.util.CookiesUtils;
 import com.tech.dimefresh.service.AuthService;
 import com.tech.dimefresh.service.SessionService;
@@ -12,7 +10,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,13 +69,4 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
-    @GetMapping("/info")
-    @ResponseBody
-    public ResponseEntity<AccountInfoDto> getAccountInfo(
-            @CookieValue(value = SESSION_ID_HEADER, required = false) String sessionId) {
-        if (sessionId == null || sessionId.isBlank()) {
-            throw new SimpleUnauthorizedExceptionRest();
-        }
-        return ResponseEntity.ok(sessionService.getAccountInfo(sessionId));
-    }
 }

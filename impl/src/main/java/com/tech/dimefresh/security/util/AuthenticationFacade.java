@@ -17,7 +17,7 @@ public class AuthenticationFacade {
     /**
      * работает только на защищенных ресурсах
      */
-    public Long getAuthenticatedUserId(){
+    public Long getAuthenticatedAccountId(){
         Long userId = null;
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

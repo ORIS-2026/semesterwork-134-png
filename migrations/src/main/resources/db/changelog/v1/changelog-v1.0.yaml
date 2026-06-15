@@ -1,10 +1,11 @@
 databaseChangeLog:
   - include:
       relativeToChangelogFile: true
-      file: DDL/1-accounts.yaml
+      file: DDL/2-s3-objects.yaml
   - include:
       relativeToChangelogFile: true
-      file: DDL/2-s3-objects.yaml
+      file: DDL/1-accounts.yaml
+
   - include:
       relativeToChangelogFile: true
       file: DDL/3-chat-data.yaml

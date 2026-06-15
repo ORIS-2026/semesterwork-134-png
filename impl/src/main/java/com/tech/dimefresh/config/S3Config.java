@@ -37,7 +37,7 @@ public class S3Config {
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
                 .region(Region.of(s3Properties.getPool()))
-                .endpointOverride(URI.create(s3Properties.getUrl()))
+                .endpointOverride(URI.create(s3Properties.getPublicUrl()))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
                 .serviceConfiguration(s3Configuration())
                 .build();

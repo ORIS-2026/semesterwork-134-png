@@ -3,86 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чат</title>
+    <title>Профиль</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
 <div class="layout">
-    <div th:replace="~{fragments/sidebar :: sidebar('chat')}"></div>
+    <div th:replace="~{fragments/sidebar :: sidebar('profile')}"></div>
 
     <main class="main">
         <div id="account_data"></div>
     </main>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const accountDataDiv = document.getElementById('account_data');
-
-        fetch('/auth/info', {
-            method: 'GET',
-            credentials: 'same-origin' // отправляет куки (sessionId) автоматически
-        })
-            .then(response => {
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        throw new Error('Не авторизован. Возможно, сессия устарела.');
-                    }
-                    throw new Error('Ошибка загрузки данных: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Формируем HTML для отображения данных профиля
-                const html = `
-                <div class="card" style="max-width: 500px; margin: 20px auto;">
-                    <div class="card__header">Информация об аккаунте</div>
-                    <div class="card__body">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">ID:</td>
-                                <td style="padding: 8px;">${escapeHtml(data.id)}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">Имя:</td>
-                                <td style="padding: 8px;">${escapeHtml(data.name)}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">Email:</td>
-                                <td style="padding: 8px;">${escapeHtml(data.email)}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">Вход через Google:</td>
-                                <td style="padding: 8px;">${data.oauthed ? 'Да' : 'Нет'}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            `;
-                accountDataDiv.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                accountDataDiv.innerHTML = `
-                <div class="empty" style="color: #b91c1c; text-align: center; padding: 20px;">
-                    ⚠️ ${escapeHtml(error.message)}<br>
-                    <a href="/auth/login" style="color: #2563eb;">Перейти на страницу входа</a>
-                </div>
-            `;
-            });
-    });
-
-    // Простая защита от XSS через вставку текста
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-</script>
+<script th:src="@{/js/profile.js}"></script>
 </body>
 </html>

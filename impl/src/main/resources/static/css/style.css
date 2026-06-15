@@ -154,6 +154,35 @@
   .btn--full {
     width: 100%;
   }
+  /* Avatar */
+  .avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .avatar-section__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .avatar {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .avatar--lg {
+    width: 72px;
+    height: 72px;
+  }
+  .avatar--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2563eb;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+  }
   /* Table */
   .table {
     width: 100%;

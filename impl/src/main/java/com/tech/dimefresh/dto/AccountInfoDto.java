@@ -4,6 +4,7 @@ public record AccountInfoDto(
         Long id,
         String name,
         String email,
-        Boolean oauthed
+        Boolean oauthed,
+        String avatarUrl
 ) {
 }

@@ -49,7 +49,12 @@ services:
       DB_URL: "jdbc:postgresql://postgres.service:5432/test"
       REDIS_HOST: "cache.service"
       REDIS_PORT: "6379"
-      MINIO_URL: "http://minio.service:9000"
+      S3_URL: "http://minio.service:9000"
+      S3_PUBLIC_URL: "http://localhost:9000"
+      S3_USER: "dimefresh"
+      S3_PASSWORLD: "123456789"
+      S3_POOL: "ru-7"
+      OAUTH2_REDIRECT_URI: "http://localhost:8082/api/oauth2/callback"
     networks:
       - dimefresh_tech_net
 

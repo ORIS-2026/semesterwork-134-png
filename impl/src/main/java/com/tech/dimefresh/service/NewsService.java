@@ -11,7 +11,6 @@ import com.tech.dimefresh.repository.NewsRepository;
 import com.tech.dimefresh.s3.S3Manager;
 import com.tech.dimefresh.security.util.AuthenticationFacade;
 import com.tech.dimefresh.service.dto.CreateNewsDto;
-import com.tech.dimefresh.service.dto.NewsDataProjection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,7 +65,7 @@ public class NewsService {
     @Transactional(readOnly = true)
     public List<NewsDto> getPublishedNews(int page) {
         int offset = page * PAGE_SIZE;
-        Long authenticatedAccountId = authenticationFacade.getAuthenticatedUserId();
+        Long authenticatedAccountId = authenticationFacade.getAuthenticatedAccountId();
 
         return newsRepository.findNewsPage(offset, PAGE_SIZE).stream()
                 .map(news -> {
@@ -94,7 +93,7 @@ public class NewsService {
         if (!newsRepository.existsById(newsId)) {
             throw new NotFoundExceptionRest("Пост не найден");
         }
-        Long accountId = authenticationFacade.getAuthenticatedUserId();
+        Long accountId = authenticationFacade.getAuthenticatedAccountId();
 
         if (newsRepository.existsLike(newsId, accountId)) {
             newsRepository.removeLike(accountId, newsId);

@@ -29,10 +29,11 @@ gen-api:
 
 minio:
   root:
-    user: dimefresh
-    password: 123456789
-  url: ${MINIO_URL:http://localhost:9000}
-  pool: ru-7
+    user: ${S3_USER:dimefresh}
+    password: ${S3_PASSWORD:123456789}
+  url: ${S3_URL:http://localhost:9000}
+  public-url: ${S3_PUBLIC_URL:http:///localhost:9000}
+  pool: ${S3_POOL:ru-7}
   bucket:
     images: images
 
@@ -40,7 +41,7 @@ oauth2:
   google:
     client-id: 159883933534-p73lht2g617juqn92ll1mciucl42jjua.apps.googleusercontent.com
     client-secret: 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
-    redirect-uri: http://localhost:8080/api/oauth2/callback
+    redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:8080/api/oauth2/callback}
     auth-uri: https://accounts.google.com/o/oauth2/v2/auth
     token-uri: https://oauth2.googleapis.com/token
     user-info-uri: https://openidconnect.googleapis.com/v1/userinfo

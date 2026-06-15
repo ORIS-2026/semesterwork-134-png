@@ -3,12 +3,6 @@ package com.tech.dimefresh.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
@@ -34,4 +28,8 @@ public class Account {
 
     @Column(name = "google_id")
     private String googleId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_s3_object_id")
+    private S3Object avatarS3Object;
 }

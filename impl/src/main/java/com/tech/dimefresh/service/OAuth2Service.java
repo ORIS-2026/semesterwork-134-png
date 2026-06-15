@@ -6,7 +6,10 @@ import com.tech.dimefresh.dto.AccountCreateDto;
 import com.tech.dimefresh.dto.OAuth2TokenResponse;
 import com.tech.dimefresh.dto.OAuthUserRespDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -72,7 +75,7 @@ public class OAuth2Service {
             throw new RuntimeException("Пользователь с таким email уже зарегистрирован");
         }
         else {
-            accountId = accountService.findByEmail(responseDto.email()).id();
+            accountId = accountService.findAccountIdByEmail(responseDto.email());
         }
 
         return sessionService.createSession(accountId);

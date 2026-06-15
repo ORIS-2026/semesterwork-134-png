@@ -1,7 +1,6 @@
 package com.tech.dimefresh.service;
 
 import com.tech.dimefresh.config.properties.S3Properties;
-import com.tech.dimefresh.dto.AccountRegisterDto;
 import com.tech.dimefresh.dto.ChatMessageDto;
 import com.tech.dimefresh.dto.S3ObjectDto;
 import com.tech.dimefresh.entity.*;
@@ -32,10 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.net.URL;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -68,7 +65,7 @@ public class ChatService {
     public void handlePrompt(Long chatId, String prompt) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new RuntimeException("Chat not found: " + chatId));
-        if(!authenticationFacade.getAuthenticatedUserId()
+        if(!authenticationFacade.getAuthenticatedAccountId()
                 .equals(chat.getOwner().getId()))
             throw new RuntimeException("Нет прав на создание запроса для генерации в этом чате");//TODO: forbidden
 
@@ -191,7 +188,7 @@ public class ChatService {
 
     @Transactional
     public Long getChatId() {
-        Long authenticatedUserId = authenticationFacade.getAuthenticatedUserId();
+        Long authenticatedUserId = authenticationFacade.getAuthenticatedAccountId();
 
         Chat chat = chatRepository.findByOwnerId(authenticatedUserId)
                 .orElse(null);
