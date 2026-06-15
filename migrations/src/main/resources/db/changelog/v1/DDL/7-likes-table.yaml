@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8-news-likes
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/7-news-likes.sql

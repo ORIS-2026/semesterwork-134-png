@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7-prompt-news
+      author: dimefresh
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: SQL/6-prompt-news.sql

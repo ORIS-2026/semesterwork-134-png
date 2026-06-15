@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<body>
+
+<aside th:fragment="sidebar(activePage)" class="sidebar">
+    <span class="sidebar__brand">AI Chat</span>
+    <hr class="sidebar__divider">
+    <ul class="sidebar__nav">
+        <li>
+            <a th:href="@{/chat}"
+               class="sidebar__link"
+               th:classappend="${activePage == 'chat'} ? 'sidebar__link__active' : ''">
+                Чат
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/news}"
+               class="sidebar__link"
+               th:classappend="${activePage == 'news'} ? 'sidebar__link__active' : ''">
+                Новости
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/profile}"
+               class="sidebar__link"
+               th:classappend="${activePage == 'profile'} ? 'sidebar__link__active' : ''">
+                Профиль
+            </a>
+        </li>
+    </ul>
+    <form th:action="@{/auth/logout}" method="post" class="sidebar__logout">
+        <button type="submit" class="sidebar__logout-btn">Выйти</button>
+    </form>
+</aside>
+
+</body>
+</html>

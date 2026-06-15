@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.tech.dimefresh'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 — Внутренняя ошибка сервера</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            overflow: auto;
+            background: #f5f5f5;
+        }
+        .layout, .sidebar, .main {
+            display: block;
+            padding: 0;
+            width: auto;
+        }
+        .sidebar {
+            display: none;
+        }
+        .auth-wrap {
+            margin: 80px auto;
+        }
+    </style>
+</head>
+<body>
+<div class="auth-wrap">
+    <div class="card auth-card">
+        <div class="card__header" th:text="${status} + ' ' + ${error}">500 Внутренняя ошибка сервера</div>
+        <div class="card__body">
+            <p th:if="${message}" th:text="${message}"></p>
+            <p th:unless="${message}">
+                На сервере произошла непредвиденная ошибка. Мы уже работаем над её исправлением.
+            </p>
+            <p class="error-hint" style="font-size: 12px; color: #6b7280; margin-top: 12px;">
+                Попробуйте обновить страницу позже или вернитесь на главную.
+            </p>
+            <div style="margin-top: 24px;">
+                <a href="/" class="btn btn--primary">🏠 На главную</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: postgres:17.7
+    container_name: semester_postgres
+    hostname: postgres.service
+    environment:
+      POSTGRES_DB: "test"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "123456789"
+    ports:
+      - "5433:5432"
+    networks:
+      - dimefresh_tech_net
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server --console-address ":9001" /data/
+    container_name: minio_semester
+    restart: unless-stopped
+    hostname: minio.service
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "dimefresh"
+      MINIO_ROOT_PASSWORD: "123456789"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - dimefresh_tech_net
+  cache_redis:
+    image: redis:latest
+    container_name: cache_semester
+    hostname: cache.service
+    ports:
+      - "6379:6379"
+    networks:
+      - dimefresh_tech_net
+  resource_server:
+    build:
+      context: ./impl
+      dockerfile: app.dockerfile
+    hostname: app.service
+    ports:
+      - "8082:8080"
+    environment:
+      DB_URL: "jdbc:postgresql://postgres.service:5432/test"
+      REDIS_HOST: "cache.service"
+      REDIS_PORT: "6379"
+      S3_URL: "http://minio.service:9000"
+      S3_PUBLIC_URL: "http://localhost:9000"
+      S3_USER: "dimefresh"
+      S3_PASSWORLD: "123456789"
+      S3_POOL: "ru-7"
+      OAUTH2_REDIRECT_URI: "http://localhost:8082/api/oauth2/callback"
+    networks:
+      - dimefresh_tech_net
+
+networks:
+  dimefresh_tech_net:
+    driver: bridge
+    name: dimefresh_tech_net

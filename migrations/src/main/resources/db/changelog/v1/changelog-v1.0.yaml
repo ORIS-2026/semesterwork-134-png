@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/2-s3-objects.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/1-accounts.yaml
+
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/3-chat-data.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/4-ai-requests.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DML/5-message-types.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/6-news-tables.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: DDL/7-likes-table.yaml
